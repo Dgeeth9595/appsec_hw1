@@ -2,8 +2,8 @@ name: Github Actions Example
 
 on: 
   push:
-	branches:
-		master
+    branches:
+	master
 
 jobs:
   test:
@@ -11,5 +11,4 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-	- run: echo "Hello World"
-	
+      - run: echo "Hello World"
