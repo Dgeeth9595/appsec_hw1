@@ -1,0 +1,15 @@
+name: Github Actions Example
+
+on: 
+  push:
+	branches:
+		master
+
+jobs:
+  test:
+    name: Running Units Tests
+    runs-on: ubuntu-latest
+
+    steps:
+	- run: echo "Hello World"
+	
