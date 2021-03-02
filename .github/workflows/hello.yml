@@ -12,3 +12,6 @@ jobs:
 
     steps:
       - run: echo "Hello World"
+      - run: ./giftcardreader 1 part2/crash1.gft
+      - run: ./giftcardreader 1 part2/crash2.gft
+      - run: ./giftcardreader 1 part2/hang1.gft
