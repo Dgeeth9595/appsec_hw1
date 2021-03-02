@@ -28,7 +28,10 @@ void animate(char *msg, unsigned char *program) {
             case 0x00:
                 break;
             case 0x01:
-                regs[arg1] = *mptr;
+                /* Fix for Crash2.gft*/
+                if (arg1 < 16){
+                    regs[arg1] = *mptr;
+                }
                 break;
             case 0x02:
                 *mptr = regs[arg1];
@@ -53,7 +56,8 @@ void animate(char *msg, unsigned char *program) {
             case 0x08:
                 goto done;
             case 0x09:
-                pc += (char)arg1;
+                /* Fix for Hang.gft*/
+                pc += (unsigned char)arg1;
                 break;
             case 0x10:
                 if (zf) pc += (char)arg1;
@@ -185,6 +189,11 @@ struct this_gift_card *gift_card_reader(FILE *input_fd) {
 		/* JAC: Why aren't return types checked? */
 		fread(&ret_val->num_bytes, 4,1, input_fd);
 
+        /* Fix for Crash1.gft*/
+        if (ret_val->num_bytes < 0){
+            return  NULL;
+        }
+
 		// Make something the size of the rest and read it in
 		ptr = malloc(ret_val->num_bytes);
 		fread(ptr, ret_val->num_bytes, 1, input_fd);
@@ -243,6 +252,7 @@ struct this_gift_card *gift_card_reader(FILE *input_fd) {
             // BDG: never seen one of these in the wild
             // text animatino (BETA)
             if (gcrd_ptr->type_of_record == 3) {
+                
                 gcp_ptr->message = malloc(32);
                 gcp_ptr->program = malloc(256);
                 memcpy(gcp_ptr->message, ptr, 32);
@@ -250,6 +260,9 @@ struct this_gift_card *gift_card_reader(FILE *input_fd) {
                 memcpy(gcp_ptr->program, ptr, 256);
                 ptr+=256;
                 gcrd_ptr->actual_record = gcp_ptr;
+
+                printf("Message: %s\n", gcp_ptr->message);
+                printf("Program: %s\n", gcp_ptr->program);
             }
 		}
 	}
@@ -263,8 +276,11 @@ int main(int argc, char **argv) {
     // BDG: no argument checking?
 	FILE *input_fd = fopen(argv[2],"r");
 	thisone = gift_card_reader(input_fd);
-	if (argv[1][0] == '1') print_gift_card_info(thisone);
-    else if (argv[1][0] == '2') gift_card_json(thisone);
-
+    if (thisone != NULL){
+        if (argv[1][0] == '1') {
+            print_gift_card_info(thisone);}
+        else if (argv[1][0] == '2') gift_card_json(thisone);
+    }
+	
 	return 0;
 }
