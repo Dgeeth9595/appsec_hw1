@@ -13,6 +13,8 @@ jobs:
     steps:
       - run: echo "Hello World"
       - run: make
+      - run: sudo apt install gcc
+      - run: make
       - run: ./giftcardreader 1 part2/crash1.gft
       - run: ./giftcardreader 1 part2/crash2.gft
       - run: ./giftcardreader 1 part2/hang1.gft
