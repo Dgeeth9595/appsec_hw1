@@ -1,0 +1,17 @@
+crash1:
+giftcardreader, uses 'giftcardexample.num_bytes' as a magic value to read a specific amount of data from any given giftcard file. 
+In giftcardreader, we can see that the 'num_bytes' value is first read from the given giftcard file. This value is than used as memory allocation
+size for a pointer variable to which the remaining data of num_bytes are written. By setting the 'examplegc.num_bytes' to -1. We will
+trigger a 'segmentation fault' when the the pointer variable is being declared. 
+
+crash2:
+In giftcardreader, the function animate performs actions based on op-code provided. The op-code '0x01' triggers the action 'regs[arg1] = *mptr;'.
+By setting arg1 value to '/0x18' or above we would be overflowing the buffer array regs causing the program to crash with 'segmentation fault'.
+
+hang1:
+In giftcardreader, the function animate performs actions based on op-code provided. This function goes on a loop and performs actions based on values in the 
+variable 'program'. This loop reads 2 arguments and a op-code in a loop till the value pc reaches the size 256.
+The op-code '0x09' performs the action 'pc += (char)arg1;'. Since this arg1, is a signed character we could set a binary bit to read this as a negative value.
+Which means pc value will always be -3 thus causing the loop to run forever and the program to hang.
+
+
