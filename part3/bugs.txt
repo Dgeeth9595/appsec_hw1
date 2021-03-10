@@ -1,0 +1,12 @@
+fuzzer1.gft - crash:
+One of the afl-fuzz bugs when ran causes the program to crash. While investigating this issue, i found that the gft file when triggered with the print gft function runs normally but crashes before it returns to the main function. This
+gft also triggers the '0x05' op-code function which runs 'regs[arg1] ^= regs[arg2]; zf = !regs[arg1];'. While messing around with the program, i found that that by setting arg1 and arg2 to be static values i could prevent the program from crashing.
+I was not able to properly investigate this issue. However, i suspect this op-code function causes a bufferoverflow that overwrites the return address value thereby causing the program to crash after 'print_gift_card_info' function is ran.
+
+
+
+fuzzer2.gft - hang:
+One of the afl-fuzz bugs when ran caused the program giftcardreader to hang. While investigating it using gdb, i realised the hang was caused by a byte data in the gft file that had a negative value. 
+This also caused the file to hang when one of the variable was incremented by a variable. Changing to char to unsigned char fixed the issue as it prevents the writing of negative value within the address space.
+
+
